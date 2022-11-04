@@ -1,5 +1,5 @@
 ---
-healthchecks_enabled: false
+healthchecks_enabled: true
 healthchecks_ping_minutes: 15
 
-healthchecks_url: ""
+healthchecks_url: "https://hc-ping.com/10a5dbf0-d804-4646-96c2-9efab939343c"

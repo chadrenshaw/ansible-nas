@@ -1,6 +1,6 @@
 ---
-code_server_enabled: false
-code_server_available_externally: false
+code_server_enabled: true
+code_server_available_externally: true
 
 # directories
 code_server_config_directory: "{{ docker_home }}/code_server"

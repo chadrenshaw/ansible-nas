@@ -291,7 +291,10 @@
       tags:
         - paperless_ng
       when: (paperless_ng_enabled | default(False))
-
+    - role: pihole
+      tags:
+        - pihole
+      when: (pihole_enabled | default(False))
     - role: piwigo
       tags:
         - piwigo

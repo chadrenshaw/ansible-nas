@@ -1,5 +1,5 @@
 ---
-timemachine_enabled: false
+timemachine_enabled: true
 
 timemachine_volume_size_limit: "0"
 timemachine_password: timemachine

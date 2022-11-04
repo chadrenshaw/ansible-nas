@@ -1,0 +1,44 @@
+---
+
+pihole_enabled: true
+pihole_available_externally: true
+
+  # directories
+pihole_config_directory: "{{ docker_home }}/pihole/config/"
+pihole_dnsmasq_directory: "{{ docker_home }}/pihole/etc/dnsmasq.d/"
+
+pihole_network_mode: "bridge"
+
+pihole_webpasswd: "pihole"
+pihole_admin_password: "pihole"
+pihole_conditional_forwarding: "true"
+pihole_conditional_forwarding_ip: "192.168.1.1" #Your router IP
+pihole_conditional_forwarding_domain: "zocalo.net" #Local network domain
+
+pihole_dns1:  "127.0.0.1"
+pihole_dns2: "192.168.1.1"
+pihole_dns3: "8.8.8.8" 
+
+pihole_dns_custom_hosts: []
+#  - name: somehost
+#    ip: 192.168.1.123
+#    aliases:
+#      - beer
+#      - pizza
+pihole_dns_custom_hosts_path: "{{ docker_pihole_host_dir_pihole }}custom_hosts.list"
+pihole_dns_custom_hosts_dnsmasq_conf_path: "{{ docker_pihole_host_dir_dnsmasqd }}99-custom-hosts.conf"
+  
+# uid / gid
+pihole_user_id: "0"
+pihole_group_id: "0"
+
+# network
+pihole_hostname: "pihole"
+pihole_http_port: "16080"
+pihole_dns_tcp_port: "53"
+pihole_dns_udp_port: "53"
+
+# specs
+pihole_container_name: "{{ pihole_hostname }}"
+pihole_memory: "1g"
+pihole_version: "docker"

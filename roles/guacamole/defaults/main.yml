@@ -1,6 +1,6 @@
 ---
-guacamole_enabled: false
-guacamole_available_externally: false
+guacamole_enabled: true
+guacamole_available_externally: true
 
 # directories
 guacamole_data_directory: "{{ docker_home }}/guacamole"

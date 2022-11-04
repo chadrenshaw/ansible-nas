@@ -1,6 +1,6 @@
 ---
-syncthing_enabled: false
-syncthing_available_externally: false
+syncthing_enabled: true
+syncthing_available_externally: true
 
 # directories
 syncthing_data_directory: "{{ samba_shares_root }}/syncthing"

@@ -1,0 +1,70 @@
+---
+
+- name: Start Pihole
+  block: 
+    - name: Create Pihole Directories
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - "{{ pihole_config_directory }}"
+        - "{{ pihole_dnsmasq_directory }}"
+
+    - name: Set the pihole_admin_password fact
+      set_fact:
+        #        __pihole_random_password: "{{ lookup('password', '/dev/null chars=ascii_letters,digits') }}"
+        #        __pihole_admin_password: "{{ pihole_admin_password | default(__pihole_random_password) }}"
+        __pihole_admin_password: "admin123"
+
+    - name: Pihole Docker Container
+      docker_container:
+        name: pihole
+        image: pihole/pihole:latest
+        pull: true
+        volumes:
+          - "{{ pihole_config_directory }}:/etc/config:rw"
+          - "{{ pihole_dnsmasq_directory }}:/etc/dnsmasq.d/:rw"  
+        ports:
+          - "{{ pihole_dns_tcp_port }}:53/tcp"
+          - "{{ pihole_dns_udp_port }}:53/udp"
+          - "{{ pihole_http_port }}:80/tcp"  
+        network_mode: "{{ pihole_network_mode }}"
+        capabilities:
+          - CAP_NET_BIND_SERVICE  # allow FTLDNS to bind to 53
+          - CAP_SYS_NICE
+        env:
+          TZ: "{{ ansible_nas_timezone }}"
+          PUID: "{{ pihole_user_id }}"
+          PGID: "{{ pihole_group_id }}"
+          VERSION: "{{ pihole_version }}"
+          DNS1: "{{ pihole_dns1 }}"
+          DNS2: "{{ pihole_dns2 }}"
+          DNS3: "{{ pihole_dns3 }}"
+          WEBPASSWD: "{{ __pihole_admin_password }}"
+            #      SERVERIP: "{{ pihole_serverip }}"
+          CONDITIONAL_FORWARDING: "{{ pihole_conditional_forwarding }}"
+          CONDITIONAL_FORWARDING_IP: "{{ pihole_conditional_forwarding_ip }}"
+          CONDITIONAL_FORWARDING_DOMAIN: "{{ pihole_conditional_forwarding_domain }}"
+        restart_policy: unless-stopped
+        memory: "{{ pihole_memory }}"
+        labels:
+          traefik.enable: "{{ pihole_available_externally | string }}"
+          traefik.http.routers.pihole.rule: "Host(`{{ pihole_hostname }}.{{ ansible_nas_domain }}`)"
+          traefik.http.routers.pihole.tls.certresolver: "letsencrypt"
+          traefik.http.routers.pihole.tls.domains[0].main: "{{ ansible_nas_domain }}"
+          traefik.http.routers.pihole.tls.domains[0].sans: "*.{{ ansible_nas_domain }}"
+          traefik.http.services.pihole.loadbalancer.server.port: "16081"
+          traefik.http.routers.pihole.service: "pihole@docker"
+
+    - name: Setup Pihole custom hosts
+      include_tasks: custom_hosts.yml
+      when: pihole_dns_custom_hosts | length > 0
+  when: pihole_enabled is true
+
+- name: Stop Pihole
+  block:
+    - name: Stop Pihole
+      docker_container:
+        name: "{{ pihole_container_name }}"
+        state: absent
+  when: pihole_enabled is false

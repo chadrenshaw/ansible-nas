@@ -1,6 +1,6 @@
 ---
-plex_enabled: false
-plex_available_externally: false
+plex_enabled: true
+plex_available_externally: true
 
 # directories
 plex_config_directory: "{{ docker_home }}/plex/config"

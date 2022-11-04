@@ -1,6 +1,6 @@
 ---
 # enable or disable the application
-mymediaforalexa_enabled: false
+mymediaforalexa_enabled: true
 
 # directories
 mymediaforalexa_media_directory: "{{ music_root }}"

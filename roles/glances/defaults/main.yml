@@ -1,6 +1,6 @@
 ---
 # enable or disable the application
-glances_enabled: false
+glances_enabled: true
 glances_available_externally: false
 
 # network
